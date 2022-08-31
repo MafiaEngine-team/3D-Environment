@@ -1,11 +1,23 @@
 import logo from './logo.svg';
 import './App.css';
-import React from 'react';
-import {Canvas} from 'react-three-fiber';
+import React, { useRef, useState } from 'react'
+import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
+import CameraControls from 'camera-controls'
+import * as THREE from 'three'
 
 import Sphere from './utils/Sphere.Component';
 import Plane from './utils/Plane.Component';
-import Controls from './utils/Controls.Component';
+
+CameraControls.install({THREE});
+extend({CameraControls})
+
+function Controls() {
+  const ref = useRef();
+  const camera = useThree((state) => state.camera);
+  const gl = useThree((state) => state.gl);
+  useFrame((state, delta) => ref.current.update(delta));
+  return <cameraControls ref={ref} args={[camera, gl.domElement]}/>;
+}
 
 function App() {
   return (
